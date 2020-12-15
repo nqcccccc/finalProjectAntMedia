@@ -22,6 +22,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -163,9 +164,16 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     //Goto dashboard
-                    progressBar.setVisibility(View.GONE);
-                    startActivity(new Intent(SignInActivity.this, DashboardActivity.class));
-                    finish();
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                    if (firebaseUser.isEmailVerified()){
+                        startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
+                        finish();
+                    }else {
+                        firebaseUser.sendEmailVerification();
+                        Toast.makeText(SignInActivity.this, "Your account haven't been verified ! ", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }else {
                     Toast.makeText(SignInActivity.this, "Sign in failed ! Please check your credentials again !", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
