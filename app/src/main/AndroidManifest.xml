@@ -10,18 +10,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.MyMeeting">
+        android:theme="@style/Theme.MyMeeting"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".Dashboard.DashboardActivity"></activity>
         <activity android:name=".SignUp.SignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-        <activity android:name=".SignIn.SignInActivity">
-        </activity>
+        <activity android:name=".SignIn.SignInActivity"></activity>
     </application>
 
 </manifest>
