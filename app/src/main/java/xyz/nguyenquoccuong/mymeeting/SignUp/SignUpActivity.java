@@ -3,14 +3,21 @@ package xyz.nguyenquoccuong.mymeeting.SignUp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,20 +28,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 import xyz.nguyenquoccuong.mymeeting.R;
+import xyz.nguyenquoccuong.mymeeting.SignIn.SignInActivity;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText txtName,txtEmail,txtPass,txtRePass;
     private Button btnSignin,btnSignup;
-    private FirebaseFirestore firebaseFirestore;;
+    private ProgressBar progressBar;
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
     private DocumentReference ref;
+    private String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
 
         init();
         signUp();
@@ -54,6 +64,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         txtRePass = findViewById(R.id.txtRePass);
         btnSignin = findViewById(R.id.btnSignin);
         btnSignup = findViewById(R.id.btnSignup);
+        progressBar = findViewById(R.id.progressBar);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        if(firebaseAuth.getCurrentUser() != null){
+//            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            finish();
+        }
+
     }
 
     @Override
@@ -62,51 +82,90 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btnSignup:
                 pushUser();
                 break;
+            case R.id.btnSignin:
+                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                break;
         }
     }
 
     private void pushUser() {
-        if(txtName.getText().toString().equals("")) {
-            Toast.makeText(SignUpActivity.this, "Please type a username", Toast.LENGTH_SHORT).show();
+        String email = txtEmail.getText().toString().trim();
+        String Pass = txtPass.getText().toString().trim();
+        String fullName = txtName.getText().toString();
+        String rePass = txtRePass.getText().toString().trim();
 
-        }else if(txtEmail.getText().toString().equals("")) {
-            Toast.makeText(SignUpActivity.this, "Please type an email id", Toast.LENGTH_SHORT).show();
-
-        }else if(txtPass.getText().toString().equals("")){
-            Toast.makeText(SignUpActivity.this, "Please type a password", Toast.LENGTH_SHORT).show();
-
-        }else if(!txtRePass.getText().toString().equals(txtPass.getText().toString())){
-            Toast.makeText(SignUpActivity.this, "Password mismatch", Toast.LENGTH_SHORT).show();
-
-        }else {
-            ref.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
-                        Toast.makeText(SignUpActivity.this, "Sorry,this user exists", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Map<String, Object> reg_entry = new HashMap<>();
-                        reg_entry.put("Name", txtName.getText().toString());
-                        reg_entry.put("Email", txtEmail.getText().toString());
-                        reg_entry.put("Password", txtPass.getText().toString());
-                        firebaseFirestore.collection("user")
-                            .add(reg_entry)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Toast.makeText(SignUpActivity.this, "Sign Up Successful !", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("Error", e.getMessage());
-                                }
-                            });
-                    }
-                }
-            });
+        if(TextUtils.isEmpty(fullName)){
+            txtName.setError("Please enter your name !");
+            return;
         }
+
+        if(TextUtils.isEmpty(email)){
+            txtEmail.setError("Please enter your email !");
+            return;
+        }
+
+        if(TextUtils.isEmpty(Pass)){
+            txtPass.setError("Please enter your password");
+            return;
+        }
+
+        if(Pass.length() < 6){
+            txtPass.setError("Password must be >= 6 characters");
+            return;
+        }
+
+        if(!rePass.equals(Pass)){
+            txtRePass.setError("Password mismatch");
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        // register the user in firebase
+
+        firebaseAuth.createUserWithEmailAndPassword(email,Pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+
+                    // send verification link
+
+                    FirebaseUser fuser = firebaseAuth.getCurrentUser();
+                    fuser.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(SignUpActivity.this, "Verification Email Has been Sent.", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("TAG", "onFailure: Email not sent " + e.getMessage());
+                        }
+                    });
+
+                    Toast.makeText(SignUpActivity.this, "User Created.", Toast.LENGTH_SHORT).show();
+                    userID = firebaseAuth.getCurrentUser().getUid();
+                    DocumentReference documentReference = firebaseFirestore.collection("users").document(userID);
+                    Map<String,Object> user = new HashMap<>();
+                    user.put("fName",fullName);
+                    user.put("email",email);
+                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d("TAG", "onSuccess: user Profile is created for "+ userID);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("TAG", "onFailure: " + e.toString());
+                        }
+                    });
+//                    startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+                }else {
+                    Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }
