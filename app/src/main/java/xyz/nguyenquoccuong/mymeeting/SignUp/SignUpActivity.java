@@ -29,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+import xyz.nguyenquoccuong.mymeeting.Dashboard.DashboardActivity;
 import xyz.nguyenquoccuong.mymeeting.R;
 import xyz.nguyenquoccuong.mymeeting.SignIn.SignInActivity;
 import xyz.nguyenquoccuong.mymeeting.User;
@@ -106,11 +107,16 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(SignUpActivity.this, "User have been sign up successfully ! ", Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
 
-                                startActivity(new Intent(getApplicationContext(), SignInActivity.class));
-                                finish();
+                                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+                                if (firebaseUser.isEmailVerified()){
+                                }else {
+                                    firebaseUser.sendEmailVerification();
+                                    Toast.makeText(SignUpActivity.this, "Check your email to verify your account ! ", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(getApplicationContext(), SignInActivity.class));
+                                    finish();
+                                }
                             }else {
                                 Toast.makeText(SignUpActivity.this, "Sign up failed ! Please try again !", Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
