@@ -55,6 +55,7 @@
         android:background="@drawable/custom_edittext"
         android:hint="Email"
         android:maxLines="1"
+        android:inputType="textEmailAddress"
         android:paddingStart="@dimen/paddingEditText"
         android:paddingEnd="@dimen/paddingEditText"
         android:textSize="14sp" />
