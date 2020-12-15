@@ -1,16 +1,21 @@
 package xyz.nguyenquoccuong.mymeeting.SignIn;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +34,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
 
     private EditText txtEmail,txtPass;
     private Button btnSignin,btnSignup;
+    private TextView tvForgot;
     private ProgressBar progressBar;
 
     private String email,Pass;
@@ -48,12 +54,14 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         txtPass = findViewById(R.id.txtPass);
         btnSignin = findViewById(R.id.btnSignin);
         btnSignup = findViewById(R.id.btnSignup);
+        tvForgot = findViewById(R.id.tvForgot);
         progressBar = findViewById(R.id.progressBar);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
         btnSignin.setOnClickListener(this);
         btnSignup.setOnClickListener(this);
+        tvForgot.setOnClickListener(this);
     }
 
     @Override
@@ -65,8 +73,59 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btnSignin:
                 signIn();
                 break;
+            case R.id.tvForgot:
+                forgot();
+                break;
         }
 
+    }
+
+    private void forgot() {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.forgot_dialog, null);
+        EditText txtEmail_forgot = alertLayout.findViewById(R.id.txtEmail_forgot);
+        Button btnRequest = alertLayout.findViewById(R.id.btnRequest);
+        ProgressBar progressBar_forgot = alertLayout.findViewById(R.id.progressBar_forgot);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setTitle("Reset Password");
+        alert.setView(alertLayout);
+
+        AlertDialog dialog = alert.create();
+        dialog.show();
+
+        btnRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email_forgot  = txtEmail_forgot.getText().toString().trim();
+
+                if(TextUtils.isEmpty(email_forgot)){
+                    txtEmail_forgot.setError("Please enter your email !");
+                    txtEmail_forgot.requestFocus();
+                    return;
+                }
+
+                if(!Patterns.EMAIL_ADDRESS.matcher(email_forgot).matches()){
+                    txtEmail_forgot.setError("Please enter valid email");
+                    txtEmail_forgot.requestFocus();
+                    return;
+                }
+                progressBar_forgot.setVisibility(View.VISIBLE);
+                firebaseAuth.sendPasswordResetEmail(email_forgot).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            progressBar_forgot.setVisibility(View.GONE);
+                            Toast.makeText(SignInActivity.this, "Please check your email to reset your password !", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }else {
+                            progressBar_forgot.setVisibility(View.GONE);
+                            Toast.makeText(SignInActivity.this, "Please try again ! Something wrong happened", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void signIn() {
@@ -79,15 +138,15 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        if(TextUtils.isEmpty(Pass)){
-            txtPass.setError("Please enter your password !");
-            txtPass.requestFocus();
-            return;
-        }
-
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             txtEmail.setError("Please enter valid email");
             txtEmail.requestFocus();
+            return;
+        }
+
+        if(TextUtils.isEmpty(Pass)){
+            txtPass.setError("Please enter your password !");
+            txtPass.requestFocus();
             return;
         }
 
