@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="emailpassword">32dp</dimen>
+    <dimen name="radiusButton">50dp</dimen>
+    <dimen name="paddingEditText">16dp</dimen>
+</resources>
