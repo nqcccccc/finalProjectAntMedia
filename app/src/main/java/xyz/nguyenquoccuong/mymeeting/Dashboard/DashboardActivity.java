@@ -2,11 +2,13 @@ package xyz.nguyenquoccuong.mymeeting.Dashboard;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import xyz.nguyenquoccuong.mymeeting.Broadcast.BroadcastActivity;
 import xyz.nguyenquoccuong.mymeeting.R;
 
 public class DashboardActivity extends AppCompatActivity implements View.OnClickListener {
@@ -30,6 +32,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
         fabNew.setVisibility(View.INVISIBLE);
         fabJoin.setVisibility(View.INVISIBLE);
 
+        fabJoin.setOnClickListener(this);
+        fabNew.setOnClickListener(this);
         fab.setOnClickListener(this);
     }
 
@@ -40,6 +44,9 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
                 fabNew.setVisibility(View.VISIBLE);
                 fabJoin.setVisibility(View.VISIBLE);
                 openFAB();
+                break;
+            case R.id.fabNew:
+                startActivity(new Intent(DashboardActivity.this, BroadcastActivity.class));
                 break;
         }
     }
