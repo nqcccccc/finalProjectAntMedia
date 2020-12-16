@@ -15,6 +15,8 @@ public class DashboardActivity extends AppCompatActivity implements View.OnClick
 
     private FloatingActionButton fab,fabNew,fabJoin;
     private boolean isFABOpen = true;
+    public static final String RTMP_BASE_URL = "rtmp://nguyenquoccuong.xyz/LiveApp/";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

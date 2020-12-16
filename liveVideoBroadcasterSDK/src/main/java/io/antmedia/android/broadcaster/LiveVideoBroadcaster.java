@@ -20,13 +20,15 @@ import android.os.Binder;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Process;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -635,7 +637,7 @@ public class LiveVideoBroadcaster extends Service implements ILiveVideoBroadcast
                 mAlertDialog = new AlertDialog.Builder(context)
                         .setTitle(R.string.permission)
                         .setMessage(getString(R.string.camera_permission_is_required))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String[] permissionArray = permissionList.toArray(new String[permissionList.size()]);
                                 ActivityCompat.requestPermissions(context,
@@ -649,7 +651,7 @@ public class LiveVideoBroadcaster extends Service implements ILiveVideoBroadcast
                     Manifest.permission.RECORD_AUDIO)) {
                 mAlertDialog = new AlertDialog.Builder(context)
                         .setMessage(getString(R.string.microphone_permission_is_required))
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 String[] permissionArray = permissionList.toArray(new String[permissionList.size()]);
                                 ActivityCompat.requestPermissions(context,
