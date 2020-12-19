@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#ffffff"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
+    tools:context="io.antmedia.android.SignIn.SignInActivity">
+    
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        android:src="@mipmap/ic_launcher"/>
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="Welcome to Meeting"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
+    <EditText
+        android:id="@+id/txtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/emailpassword"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/emailpassword"
+        android:background="@drawable/custom_edittext"
+        android:hint="Email"
+        android:maxLines="1"
+        android:inputType="textEmailAddress"
+        android:paddingStart="@dimen/paddingEditText"
+        android:paddingEnd="@dimen/paddingEditText"
+        android:textSize="14sp"/>
+    <EditText
+        android:id="@+id/txtPass"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="@dimen/emailpassword"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="@dimen/emailpassword"
+        android:background="@drawable/custom_edittext"
+        android:hint="Password"
+        android:maxLines="1"
+        android:inputType="textPassword"
+        android:paddingStart="@dimen/paddingEditText"
+        android:paddingEnd="@dimen/paddingEditText"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/btnSignin"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/custom_button"
+        android:hapticFeedbackEnabled="false"
+        android:text="Sign In"/>
+
+    <TextView
+        android:id="@+id/tvForgot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/emailpassword"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/emailpassword"
+        android:gravity="center"
+        android:text="Forgot password?" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/emailpassword"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/emailpassword"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tvHave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/emailpassword"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="@dimen/emailpassword"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:text="Did you have account?" />
+
+    <Button
+        android:id="@+id/btnSignup"
+        android:layout_width="200dp"
+        android:layout_height="60dp"
+        android:background="@drawable/custom_button"
+        android:layout_marginStart="@dimen/emailpassword"
+        android:layout_marginEnd="@dimen/emailpassword"
+        android:layout_marginBottom="8dp"
+        android:text="Sign Up"/>
+
+
+</LinearLayout>

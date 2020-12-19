@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "135727119339",
+    "firebase_url": "https://meeting-36ff4-default-rtdb.firebaseio.com",
+    "project_id": "meeting-36ff4",
+    "storage_bucket": "meeting-36ff4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:135727119339:android:f2cbc4eba9cd99c987b7ae",
+        "android_client_info": {
+          "package_name": "io.antmedia.android.livevideopublisher"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "135727119339-pjnp2f2rqvvpdeq5ii6n85rh0aqugvrh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbHnqWcFguf8Sukj_B6gw1Ayo5uB_fP9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "135727119339-pjnp2f2rqvvpdeq5ii6n85rh0aqugvrh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
