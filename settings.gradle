@@ -1,3 +1,0 @@
-include ':liveVideoBroadcasterSDK'
-include ':app'
-rootProject.name = "My Meeting"
