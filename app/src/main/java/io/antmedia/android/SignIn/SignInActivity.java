@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,9 +115,13 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                 if(task.isSuccessful()){
                     //Goto dashboard
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-
+                    String userID  = FirebaseAuth.getInstance().getUid();
+                    Log.d("TAG", "uid: "+userID);
                     if (firebaseUser.isEmailVerified()){
-                        startActivity(new Intent(getApplicationContext(), DashboardAcitivity.class));
+                        Intent intent = new Intent(getApplicationContext(), DashboardAcitivity.class);
+                        intent.putExtra("userID",userID);
+                        intent.putExtra("email",email);
+                        startActivity(intent);
                         finish();
                     }else {
                         firebaseUser.sendEmailVerification();

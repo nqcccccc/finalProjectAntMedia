@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -96,15 +97,18 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     private long resumePosition;
     private RtmpDataSource.RtmpDataSourceFactory rtmpDataSourceFactory;
     protected String userAgent;
-    private String videoID = "random live=1";
+    private String videoID = "";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initData();
-
         setContentView(R.layout.activity_play);
+
+        Intent intent = getIntent();
+        videoID = intent.getStringExtra("roomID");
+        Log.d("TAG", "roomID: " + videoID);
 
         init();
         play(null);
@@ -149,7 +153,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btnLeave:
-                startActivity(new Intent(PlayActivity.this, DashboardAcitivity.class));
                 finish();
                 break;
             case R.id.btnRetry:

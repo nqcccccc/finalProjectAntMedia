@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.0.aar/36ce40dcfcdbc8454b1f2a6c18657af4/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.0.aar/36ce40dcfcdbc8454b1f2a6c18657af4/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.0.aar/36ce40dcfcdbc8454b1f2a6c18657af4/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.0.aar/d7b5dbb4b8844ec73fc68a29f1b7ea9b/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.0.aar/d7b5dbb4b8844ec73fc68a29f1b7ea9b/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-core-16.0.0.aar/d7b5dbb4b8844ec73fc68a29f1b7ea9b/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

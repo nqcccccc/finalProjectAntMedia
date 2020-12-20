@@ -60,9 +60,9 @@ public class BroadcastActivity extends AppCompatActivity {
     private CameraResolutionsFragment mCameraResolutionsDialog;
     private Intent mLiveVideoBroadcasterServiceIntent;
     private ILiveVideoBroadcaster mLiveVideoBroadcaster;
+    private String streamName = "";
 
     private ServiceConnection Connection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -85,7 +85,8 @@ public class BroadcastActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_broadcast);
-
+        Intent intent = getIntent();
+        streamName = intent.getStringExtra("userID");
         init();
 
         //binding on resume not to having leaked service connection
@@ -266,26 +267,12 @@ public class BroadcastActivity extends AppCompatActivity {
 
     }
 
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(MAX_LENGTH);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++){
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
-    }
-
     public void broadcast(View v) {
         if (!mIsRecording)
         {
             if (mLiveVideoBroadcaster != null) {
                 if (!mLiveVideoBroadcaster.isConnected()) {
-                    String streamName = "random";// set random
-                    Log.d(TAG, "toggleBroadcasting: "+streamName);
-
+                    Log.d(TAG, "broadcast: " +streamName);
                     new AsyncTask<String, String, Boolean>() {
                         ContentLoadingProgressBar
                                 progressBar;

@@ -19,6 +19,7 @@
             android:textSize="24sp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgAva"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="top|end"
