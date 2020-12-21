@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -28,6 +29,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -113,6 +122,7 @@ public class BroadcastActivity extends AppCompatActivity implements View.OnClick
         btnStart = findViewById(R.id.btnStart);
         mRootView = findViewById(R.id.root_layout);
         TimerHandler = new TimerHandler();
+        btnChat.setClickable(false);
 
         if (gls != null) {
             gls.setEGLContextClientVersion(2);     // select GLES 2.0
@@ -344,7 +354,26 @@ public class BroadcastActivity extends AppCompatActivity implements View.OnClick
 
             stopTimer();
             mLiveVideoBroadcaster.stopBroadcasting();
+
+            //Delete message of  whenever stop record
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+            Query deleteMessageOfRoomID = reference.child("Message")
+                    .orderByChild("roomID").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            deleteMessageOfRoomID.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                        messageSnapshot.getRef().removeValue();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
         }
+
 
         mIsRecording = false;
     }

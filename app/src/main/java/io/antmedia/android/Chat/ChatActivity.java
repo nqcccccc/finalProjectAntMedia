@@ -37,6 +37,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextInput;
     private List<Message> messageList;
 
+    // Info
+    private String userID;
+    private String roomID;
+    private String messageContent;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +58,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     for (DataSnapshot messageSnapshot : dataSnapshot.getChildren())
                     {
                         Message m = messageSnapshot.getValue(Message.class);
-                        messageList.add(m);
+
+                        // Load những Message có roomID bằng với lại roomID trong ChatActivity
+                        if (m.getRoomID().equals(roomID))
+                        {
+                            messageList.add(m);
+                        }
                     }
                     listViewMessage.setAdapter(new MessageAdapter(ChatActivity.this, messageList));
                 }
@@ -75,6 +85,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         messageList = new ArrayList<>();
         myDatabase = FirebaseDatabase.getInstance().getReference("Messages");
 
+        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        roomID = userID;
+        Intent intent = getIntent();
+        if (intent.hasExtra("roomID"))
+        {
+            roomID = intent.getStringExtra("roomID");
+        }
+
+        messageContent = editTextInput.getText().toString();
+
         btnSend.setOnClickListener(this);
     }
 
@@ -89,27 +109,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     private void pushMessage()
     {
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        final String userID = firebaseUser.getUid();
-        String roomID = userID;
-        Intent intent = getIntent();
-        if (intent.hasExtra("roomID"))
-        {
-            roomID = intent.getStringExtra("roomID");
-        }
-
-        final String messageContent = editTextInput.getText().toString();
         if (messageContent.equals(""))
         {
             return;
         }
 
-
         // Get data in RTDB
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query getUser = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
 
-        final String finalRoomID = roomID;
         getUser.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -120,7 +128,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     String userEmail = user.getEmail();
                     String userAvartar = user.getAvatar();
 
-                    myDatabase.push().setValue(new Message(userID, userEmail, userName, finalRoomID, userAvartar, messageContent));
+                    myDatabase.push().setValue(new Message(userID, userEmail, userName, roomID, userAvartar, messageContent));
                     editTextInput.setText("");
                 }
             }

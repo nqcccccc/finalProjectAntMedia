@@ -9,10 +9,10 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_avartar_mess"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="32dp"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,27 +22,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="6dp"
         android:text="TextView"
+        android:textStyle="italic"
         app:layout_constraintStart_toEndOf="@+id/img_avartar_mess"
         app:layout_constraintTop_toBottomOf="@+id/tv_name_mess" />
-
-    <TextView
-        android:id="@+id/tv_name_mess"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="26dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/img_avartar_mess"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="7dp"
         android:background="@drawable/custom_message"
         android:gravity="center"
         android:paddingStart="10dp"
@@ -51,6 +42,18 @@
         android:paddingBottom="5dp"
         android:text="TextView"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_avartar_mess" />
+        app:layout_constraintStart_toEndOf="@+id/img_avartar_mess"
+        app:layout_constraintTop_toBottomOf="@+id/tv_email_mess" />
+
+    <TextView
+        android:id="@+id/tv_name_mess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:text="TextView"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/img_avartar_mess"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
