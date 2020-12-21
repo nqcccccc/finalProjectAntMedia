@@ -1,14 +1,19 @@
 package io.antmedia.android.Play;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -140,7 +145,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
 
         btnRec.setOnClickListener(this);
         btnRaise.setOnClickListener(this);
-        btnShare.setOnClickListener(this);
         btnChat.setOnClickListener(this);
         btnLeave.setOnClickListener(this);
         btnRetry.setOnClickListener(this);
@@ -470,5 +474,37 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         String URL = RTMP_BASE_URL + videoID;
         //String URL = "http://192.168.1.34:5080/vod/streams/test_adaptive.m3u8";
         initializePlayer(URL);
+    }
+
+    public void share(View view) {
+        String[] ID=videoID.split("\\s");
+
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.share_dialog, null);
+
+        TextView tvShare = alertLayout.findViewById(R.id.tvShare);
+        ImageButton btnCopy = alertLayout.findViewById(R.id.btnCopy);
+
+        tvShare.setText(ID[0]);
+        Log.d("TAG", "share: "+ID[0]);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayout);
+
+        final AlertDialog dialogI = alert.create();git
+        dialogI.show();
+
+        Object clipboardService = getSystemService(CLIPBOARD_SERVICE);
+        final ClipboardManager clipboardManager = (ClipboardManager)clipboardService;
+
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipData clipData = ClipData.newPlainText("Room ID", videoID);
+                clipboardManager.setPrimaryClip(clipData);
+                // Popup a snackbar.
+                Snackbar snackbar = Snackbar.make(view, "Room ID has been copied to system clipboard.", Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+        });
     }
 }
