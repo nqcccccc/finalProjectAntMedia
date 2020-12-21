@@ -21,7 +21,7 @@ public class MessageAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private Context context;
 
-    public MessageAdapter(Context aContext, List<Message> listMessage)
+    public MessageAdapter(ChatActivity aContext, List<Message> listMessage)
     {
         this.listMessage = listMessage;
         this.context = aContext;

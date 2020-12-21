@@ -2,6 +2,8 @@ package io.antmedia.android.Broadcast;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -152,7 +154,10 @@ public class BroadcastActivity extends AppCompatActivity implements View.OnClick
 //                break;
             case R.id.btnChat:
 //                chat();
-                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+
+                // set Fragmentclass Arguments
+                DialogFragment dialog = ChatActivity.newInstance();
+                dialog.show(getSupportFragmentManager().beginTransaction(), "tag");
                 break;
 //            case R.id.btnMic:
 //                mic();
@@ -356,8 +361,9 @@ public class BroadcastActivity extends AppCompatActivity implements View.OnClick
             mLiveVideoBroadcaster.stopBroadcasting();
 
             //Delete message of  whenever stop record
+
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-            Query deleteMessageOfRoomID = reference.child("Message")
+            Query deleteMessageOfRoomID = reference.child("Messages")
                     .orderByChild("roomID").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid());
             deleteMessageOfRoomID.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -369,11 +375,10 @@ public class BroadcastActivity extends AppCompatActivity implements View.OnClick
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
                 }
             });
-        }
 
+        }
 
         mIsRecording = false;
     }

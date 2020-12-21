@@ -1,11 +1,16 @@
 package io.antmedia.android.Chat;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -27,7 +32,12 @@ import io.antmedia.android.Message;
 import io.antmedia.android.User;
 import io.antmedia.android.broadcaster.R;
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
+public class ChatActivity extends DialogFragment implements View.OnClickListener {
+
+    public static ChatActivity newInstance()
+    {
+        return new ChatActivity();
+    }
 
     private DatabaseReference myDatabase;
 
@@ -38,16 +48,38 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private List<Message> messageList;
 
     // Info
-    private String userID;
+    private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private String roomID;
     private String messageContent;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_dialog_chat);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogTheme);
+    }
 
-        init();
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.layout_dialog_chat, container, false);
+
+        listViewMessage = view.findViewById(R.id.list_view_message);
+        btnSend = view.findViewById(R.id.btn_send);
+        editTextInput = view.findViewById(R.id.edit_text_input_message);
+
+        messageList = new ArrayList<>();
+        myDatabase = FirebaseDatabase.getInstance().getReference("Messages");
+
+        btnSend.setOnClickListener(this);
+
+        roomID = getArguments().getString("roomID").toString();
+
+        if (roomID.equals("null"))
+        {
+            roomID = userID;
+        }
+        messageContent = editTextInput.getText().toString();
+
 
         myDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -74,29 +106,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+
+        return view;
     }
 
-    private void init()
-    {
-        listViewMessage = findViewById(R.id.list_view_message);
-        btnSend = findViewById(R.id.btn_send);
-        editTextInput = findViewById(R.id.edit_text_input_message);
 
-        messageList = new ArrayList<>();
-        myDatabase = FirebaseDatabase.getInstance().getReference("Messages");
 
-        userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        roomID = userID;
-        Intent intent = getIntent();
-        if (intent.hasExtra("roomID"))
-        {
-            roomID = intent.getStringExtra("roomID");
-        }
 
-        messageContent = editTextInput.getText().toString();
-
-        btnSend.setOnClickListener(this);
-    }
 
     @Override
     public void onClick(View view) {
@@ -115,7 +131,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         // Get data in RTDB
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query getUser = FirebaseDatabase.getInstance().getReference().child("Users").child(userID);
 
         getUser.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -127,7 +142,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     String userName = user.getFullName();
                     String userEmail = user.getEmail();
                     String userAvartar = user.getAvatar();
-
+                    Log.d("ERROR", userID);
                     myDatabase.push().setValue(new Message(userID, userEmail, userName, roomID, userAvartar, messageContent));
                     editTextInput.setText("");
                 }
