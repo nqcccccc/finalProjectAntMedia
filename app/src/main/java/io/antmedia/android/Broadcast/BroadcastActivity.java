@@ -3,6 +3,8 @@ package io.antmedia.android.Broadcast;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,17 +25,25 @@ import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.antmedia.android.Dashboard.DashboardAcitivity;
+import io.antmedia.android.SignIn.SignInActivity;
 import io.antmedia.android.broadcaster.ILiveVideoBroadcaster;
 import io.antmedia.android.broadcaster.LiveVideoBroadcaster;
 import io.antmedia.android.broadcaster.R;
@@ -113,46 +123,14 @@ public class BroadcastActivity extends AppCompatActivity {
         mRootView = findViewById(R.id.root_layout);
         TimerHandler = new TimerHandler();
 
+
+        btnChat.setClickable(false);
+        btnRec.setClickable(false);
+
         if (gls != null) {
             gls.setEGLContextClientVersion(2);     // select GLES 2.0
         }
-
-//        btnRec.setOnClickListener(this);
-//        btnSetting.setOnClickListener(this);
-//        btnCam.setOnClickListener(this);
-//        btnChat.setOnClickListener(this);
-//        btnMic.setOnClickListener(this);
-//        btnStart.setOnClickListener(this);
-//        btnShare.setOnClickListener(this);
-
     }
-
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()){
-//            case R.id.btnStart:
-//                broadcast();
-//                break;
-//            case R.id.btnCam:
-//                cam();
-//                break;
-//            case R.id.btnSetting:
-//                setting();
-//                break;
-//            case R.id.btnChat:
-//                //chat();
-//                break;
-//            case R.id.btnMic:
-//                mic();
-//                break;
-//            case R.id.btnShare:
-//                //share();
-//                break;
-//            case R.id.btnRec:
-//                //rec();
-//                break;
-//        }
-//    }
 
     public void cam(View v) {
         if (mLiveVideoBroadcaster != null) {
@@ -298,6 +276,7 @@ public class BroadcastActivity extends AppCompatActivity {
                                 btnStart.setText("STOP");
                                 btnSetting.setClickable(false);
                                 btnChat.setClickable(true);
+                                btnRec.setClickable(true);
                                 startTimer();//start the recording duration
                             }
                             else {
@@ -328,6 +307,39 @@ public class BroadcastActivity extends AppCompatActivity {
         mLiveVideoBroadcaster.setAudioEnable(!mIsMuted);
         btnMic.setImageDrawable(getResources()
                 .getDrawable(mIsMuted ? R.drawable.ic_mic_mute_off_24 : R.drawable.ic_mic_mute_on_24));
+    }
+
+    public void share(View view) {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.share_dialog, null);
+
+        TextView tvShare = alertLayout.findViewById(R.id.tvShare);
+        ImageButton btnCopy = alertLayout.findViewById(R.id.btnCopy);
+
+        tvShare.setText(streamName);
+        Log.d(TAG, "share: "+streamName);
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayout);
+
+        final AlertDialog dialogI = alert.create();
+        dialogI.show();
+
+        Object clipboardService = getSystemService(CLIPBOARD_SERVICE);
+        final ClipboardManager clipboardManager = (ClipboardManager)clipboardService;
+
+        btnCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ClipData clipData = ClipData.newPlainText("Room ID", streamName);
+                clipboardManager.setPrimaryClip(clipData);
+                // Popup a snackbar.
+                Snackbar snackbar = Snackbar.make(view, "Room ID has been copied to system clipboard.", Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+        });
+
+
+
     }
 
     public void triggerStopRecording() {

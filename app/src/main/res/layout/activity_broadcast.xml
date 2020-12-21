@@ -96,6 +96,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:onClick="share"
             android:src="@drawable/ic_baseline_share_24"
             />
         <ImageButton
