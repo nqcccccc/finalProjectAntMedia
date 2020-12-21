@@ -93,12 +93,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         final String userID = firebaseUser.getUid();
         String roomID = userID;
         Intent intent = getIntent();
-        if (!intent.getStringExtra("roomID").equals(null))
+        if (intent.hasExtra("roomID"))
         {
             roomID = intent.getStringExtra("roomID");
         }
 
         final String messageContent = editTextInput.getText().toString();
+        if (messageContent.equals(""))
+        {
+            return;
+        }
+
 
         // Get data in RTDB
         final DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
