@@ -35,6 +35,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:onClick="rec"
             android:src="@drawable/ic_baseline_fiber_manual_record_24"
             />
         <ImageButton

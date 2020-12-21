@@ -59,6 +59,7 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
 
+import java.io.File;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -68,6 +69,8 @@ import io.antmedia.android.broadcaster.R;
 import io.antmedia.android.liveVideoPlayer.DefaultExtractorsFactoryForFLV;
 import io.antmedia.android.liveVideoPlayer.RtmpDataSource;
 
+import static android.os.Environment.DIRECTORY_DCIM;
+import static android.os.Environment.getExternalStoragePublicDirectory;
 import static io.antmedia.android.Dashboard.DashboardAcitivity.RTMP_BASE_URL;
 
 
@@ -101,7 +104,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     private int resumeWindow;
     private long resumePosition;
     private RtmpDataSource.RtmpDataSourceFactory rtmpDataSourceFactory;
-    protected String userAgent;
+    protected String userAgent,URL;
     private String videoID = "";
 
 
@@ -143,7 +146,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         btnRetry = findViewById(R.id.btnRetry);
         playerView = findViewById(R.id.playerView);
 
-        btnRec.setOnClickListener(this);
         btnRaise.setOnClickListener(this);
         btnChat.setOnClickListener(this);
         btnLeave.setOnClickListener(this);
@@ -471,7 +473,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void play(View view) {
-        String URL = RTMP_BASE_URL + videoID;
+        URL = RTMP_BASE_URL + videoID;
         //String URL = "http://192.168.1.34:5080/vod/streams/test_adaptive.m3u8";
         initializePlayer(URL);
     }
@@ -506,5 +508,28 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 snackbar.show();
             }
         });
+    }
+
+    public void rec(View view) {
+        String title = "/" + System.currentTimeMillis() + ".mp4";
+        File targetFile = new File(getExternalStoragePublicDirectory(DIRECTORY_DCIM).toString() + title);
+        Toast.makeText(this, title, Toast.LENGTH_SHORT).show();
+        Log.d("TAG", "rec: "+targetFile);
+
+//        command = arrayOf("-i", URL, "-acodec", "copy", "-vcodec", "copy", targetFile.toString())
+//
+//        try {
+//            // Load the binary
+//            ffmpeg.loadBinary(object : LoadBinaryResponseHandler() {})
+//        } catch (e: FFmpegNotSupportedException) {
+//            e.printStackTrace()
+//        }
+//
+//        try {
+//            // Execute command
+//            ffmpeg.execute(command, object : ExecuteBinaryResponseHandler() {})
+//        } catch (e: FFmpegCommandAlreadyRunningException) {
+//            e.printStackTrace()
+//        }
     }
 }

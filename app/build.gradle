@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:16.0.1'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.writingminds:FFmpegAndroid:0.3.2'
 }
