@@ -490,7 +490,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(alertLayout);
 
-        final AlertDialog dialogI = alert.create();git
+        final AlertDialog dialogI = alert.create();
         dialogI.show();
 
         Object clipboardService = getSystemService(CLIPBOARD_SERVICE);
