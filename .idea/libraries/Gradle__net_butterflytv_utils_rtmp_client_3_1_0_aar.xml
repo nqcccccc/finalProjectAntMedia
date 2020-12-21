@@ -9,6 +9,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rtmp-client-3.1.0.aar/d3cd0a354b6d0965fdb921af955d1275/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rtmp-client-3.1.0.aar/d3cd0a354b6d0965fdb921af955d1275/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rtmp-client-3.1.0.aar/d3cd0a354b6d0965fdb921af955d1275/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rtmp-client-3.1.0.aar/b51d46bf2f2e7e2a9c3aa6cce1f9890a/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rtmp-client-3.1.0.aar/b51d46bf2f2e7e2a9c3aa6cce1f9890a/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/rtmp-client-3.1.0.aar/b51d46bf2f2e7e2a9c3aa6cce1f9890a/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.butterflytv.utils/rtmp-client/3.1.0/dd74cde20318e1434d90f031a725eca0fa48db4f/rtmp-client-3.1.0-javadoc.jar!/" />
