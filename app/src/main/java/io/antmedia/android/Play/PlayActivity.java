@@ -58,6 +58,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 
+import io.antmedia.android.Chat.ChatActivity;
 import io.antmedia.android.Dashboard.DashboardAcitivity;
 import io.antmedia.android.broadcaster.R;
 import io.antmedia.android.liveVideoPlayer.DefaultExtractorsFactoryForFLV;
@@ -157,7 +158,11 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnRetry:
                 play(null);
-
+            case R.id.btnChat:
+                Intent intentToChat = new Intent(getApplicationContext(), ChatActivity.class);
+                intentToChat.putExtra("roomID", videoID);
+                startActivity(intentToChat);
+                break;
         }
     }
 

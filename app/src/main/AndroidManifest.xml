@@ -35,8 +35,7 @@
             android:theme="@style/AppThemeDark" />
 
         <service android:name=".LiveVideoBroadcaster" />
-        <activity android:name="io.antmedia.android.Chat.ChatActivity"
-            android:theme="@android:style/Theme.Dialog" />
+        <activity android:name="io.antmedia.android.Chat.ChatActivity" />
     </application>
 
 </manifest>

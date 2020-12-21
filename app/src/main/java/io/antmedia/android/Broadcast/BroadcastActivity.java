@@ -156,8 +156,8 @@ public class BroadcastActivity extends AppCompatActivity implements View.OnClick
 //                chat();
 
                 // set Fragmentclass Arguments
-                DialogFragment dialog = ChatActivity.newInstance();
-                dialog.show(getSupportFragmentManager().beginTransaction(), "tag");
+                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                //dialog.show();
                 break;
 //            case R.id.btnMic:
 //                mic();

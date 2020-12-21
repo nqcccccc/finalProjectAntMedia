@@ -7,9 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,12 +30,7 @@ import io.antmedia.android.Message;
 import io.antmedia.android.User;
 import io.antmedia.android.broadcaster.R;
 
-public class ChatActivity extends DialogFragment implements View.OnClickListener {
-
-    public static ChatActivity newInstance()
-    {
-        return new ChatActivity();
-    }
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener {
 
     private DatabaseReference myDatabase;
 
@@ -49,37 +42,20 @@ public class ChatActivity extends DialogFragment implements View.OnClickListener
 
     // Info
     private String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private String roomID;
+    private String roomID = userID;
     private String messageContent;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogTheme);
-    }
+        setContentView(R.layout.layout_dialog_chat);
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.layout_dialog_chat, container, false);
-
-        listViewMessage = view.findViewById(R.id.list_view_message);
-        btnSend = view.findViewById(R.id.btn_send);
-        editTextInput = view.findViewById(R.id.edit_text_input_message);
-
-        messageList = new ArrayList<>();
-        myDatabase = FirebaseDatabase.getInstance().getReference("Messages");
-
-        btnSend.setOnClickListener(this);
-
-        roomID = getArguments().getString("roomID").toString();
-
-        if (roomID.equals("null"))
+        init();
+        Intent intent = getIntent();
+        if (intent.hasExtra("roomID"))
         {
-            roomID = userID;
+            roomID = intent.getStringExtra("roomID");
         }
-        messageContent = editTextInput.getText().toString();
-
 
         myDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -106,13 +82,19 @@ public class ChatActivity extends DialogFragment implements View.OnClickListener
 
             }
         });
-
-        return view;
     }
 
+    private void init()
+    {
+        listViewMessage = findViewById(R.id.list_view_message);
+        btnSend = findViewById(R.id.btn_send);
+        editTextInput = findViewById(R.id.edit_text_input_message);
 
+        messageList = new ArrayList<>();
+        myDatabase = FirebaseDatabase.getInstance().getReference("Messages");
 
-
+        btnSend.setOnClickListener(this);
+    }
 
     @Override
     public void onClick(View view) {
@@ -125,6 +107,17 @@ public class ChatActivity extends DialogFragment implements View.OnClickListener
 
     private void pushMessage()
     {
+        Intent intent = getIntent();
+        if (intent.hasExtra("roomID"))
+        {
+            roomID = intent.getStringExtra("roomID");
+        }
+        else
+        {
+            roomID = userID;
+        }
+        messageContent = editTextInput.getText().toString();
+
         if (messageContent.equals(""))
         {
             return;
