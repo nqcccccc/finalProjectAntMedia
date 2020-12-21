@@ -114,7 +114,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
         else
         {
-            roomID = userID;
+            roomID = this.userID;
         }
         messageContent = editTextInput.getText().toString();
 

@@ -122,7 +122,7 @@ public class DashboardAcitivity extends AppCompatActivity implements View.OnClic
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String roomID = txtRoomID.getText().toString().trim() + " live=1";
+                String roomID = txtRoomID.getText().toString().trim() + "live=1";
                 Log.d("TAG", "RoomID: "+roomID);
                 Intent intentJoin = new Intent(DashboardAcitivity.this, PlayActivity.class);
                 intentJoin.putExtra("roomID",roomID);
