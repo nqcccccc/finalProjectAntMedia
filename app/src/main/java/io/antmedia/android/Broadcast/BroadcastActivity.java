@@ -34,6 +34,7 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import io.antmedia.android.Chat.ChatActivity;
 import io.antmedia.android.broadcaster.ILiveVideoBroadcaster;
 import io.antmedia.android.broadcaster.LiveVideoBroadcaster;
 import io.antmedia.android.broadcaster.R;
@@ -42,7 +43,7 @@ import io.antmedia.android.broadcaster.utils.Resolution;
 import static io.antmedia.android.Dashboard.DashboardAcitivity.RTMP_BASE_URL;
 
 
-public class BroadcastActivity extends AppCompatActivity {
+public class BroadcastActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final int MAX_LENGTH = 10;
     private GLSurfaceView gls;
@@ -120,16 +121,16 @@ public class BroadcastActivity extends AppCompatActivity {
 //        btnRec.setOnClickListener(this);
 //        btnSetting.setOnClickListener(this);
 //        btnCam.setOnClickListener(this);
-//        btnChat.setOnClickListener(this);
+        btnChat.setOnClickListener(this);
 //        btnMic.setOnClickListener(this);
 //        btnStart.setOnClickListener(this);
 //        btnShare.setOnClickListener(this);
 
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()){
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
 //            case R.id.btnStart:
 //                broadcast();
 //                break;
@@ -139,9 +140,10 @@ public class BroadcastActivity extends AppCompatActivity {
 //            case R.id.btnSetting:
 //                setting();
 //                break;
-//            case R.id.btnChat:
-//                //chat();
-//                break;
+            case R.id.btnChat:
+//                chat();
+                startActivity(new Intent(getApplicationContext(), ChatActivity.class));
+                break;
 //            case R.id.btnMic:
 //                mic();
 //                break;
@@ -151,8 +153,8 @@ public class BroadcastActivity extends AppCompatActivity {
 //            case R.id.btnRec:
 //                //rec();
 //                break;
-//        }
-//    }
+        }
+    }
 
     public void cam(View v) {
         if (mLiveVideoBroadcaster != null) {

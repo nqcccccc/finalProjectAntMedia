@@ -97,7 +97,7 @@ public class DashboardAcitivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.fabNew:
                 Intent intent = new Intent(DashboardAcitivity.this, BroadcastActivity.class);
-                intent.putExtra("userID",userID);
+                intent.putExtra("userID", userID);
                 startActivity(intent);
                 break;
             case R.id.fabJoin:
