@@ -104,6 +104,9 @@ public class DashboardAcitivity extends AppCompatActivity implements View.OnClic
             case R.id.fabNew:
                 Intent intent = new Intent(DashboardAcitivity.this, BroadcastActivity.class);
                 intent.putExtra("userID",userID);
+                intent.putExtra("email",user.getEmail());
+                intent.putExtra("avatar",user.getAvatar());
+                intent.putExtra("fullName",user.getFullName());
                 startActivity(intent);
                 break;
             case R.id.fabJoin:
@@ -170,6 +173,10 @@ public class DashboardAcitivity extends AppCompatActivity implements View.OnClic
                 Log.d("TAG", "RoomID: "+roomID);
                 Intent intentJoin = new Intent(DashboardAcitivity.this, PlayActivity.class);
                 intentJoin.putExtra("roomID",roomID);
+                intentJoin.putExtra("userID",userID);
+                intentJoin.putExtra("email",user.getEmail());
+                intentJoin.putExtra("avatar",user.getAvatar());
+                intentJoin.putExtra("fullName",user.getFullName());
                 startActivity(intentJoin);
                 dialogJ.cancel();
             }

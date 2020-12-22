@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,13 +60,23 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.util.Util;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.File;
 import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.util.ArrayList;
+import java.util.List;
 
+import io.antmedia.android.Broadcast.BroadcastActivity;
 import io.antmedia.android.Dashboard.DashboardAcitivity;
+import io.antmedia.android.Message;
+import io.antmedia.android.MessageAdapter;
 import io.antmedia.android.broadcaster.R;
 import io.antmedia.android.liveVideoPlayer.DefaultExtractorsFactoryForFLV;
 import io.antmedia.android.liveVideoPlayer.RtmpDataSource;
@@ -105,7 +117,9 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     private long resumePosition;
     private RtmpDataSource.RtmpDataSourceFactory rtmpDataSourceFactory;
     protected String userAgent,URL;
-    private String videoID = "";
+    private String videoID = "",streamName,userID,fullName,avatar,email;
+
+    private String[] ID;
 
 
     @Override
@@ -116,8 +130,14 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = getIntent();
         videoID = intent.getStringExtra("roomID");
-        Log.d("TAG", "roomID: " + videoID);
+        userID = intent.getStringExtra("userID");
+        email = intent.getStringExtra("email");
+        fullName = intent.getStringExtra("fullName");
+        avatar = intent.getStringExtra("avatar");
 
+        Log.d("TAG", "roomID: " + videoID);
+        ID=videoID.split("\\s");
+        streamName = ID[0];
         init();
         play(null);
 
@@ -163,8 +183,63 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btnRetry:
                 play(null);
+                break;
+            case R.id.btnChat:
+                chat();
+                break;
 
         }
+    }
+
+    private void chat() {
+        LayoutInflater inflaterM = getLayoutInflater();
+        View alertLayoutM = inflaterM.inflate(R.layout.message_dialog, null);
+
+        final ListView lvMsg = alertLayoutM.findViewById(R.id.lvMsg);
+        final EditText txtMsg = alertLayoutM.findViewById(R.id.txtMsg);
+        ImageButton btnSend = alertLayoutM.findViewById(R.id.btnSend);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayoutM);
+
+        final AlertDialog dialogI = alert.create();
+        dialogI.show();
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String mess = txtMsg.getText().toString();
+                io.antmedia.android.Message message = new io.antmedia.android.Message(userID,email,fullName,streamName,avatar,mess);
+                FirebaseDatabase.getInstance()
+                        .getReference("message")
+                        .child(streamName)
+                        .push()
+                        .setValue(message);
+
+                // Clear the input
+                txtMsg.setText("");
+            }
+        });
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("message").child(streamName);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Message> data = new ArrayList<>();
+                for (DataSnapshot item : dataSnapshot.getChildren())
+                {
+                    data.add(item.getValue(io.antmedia.android.Message.class));
+                    Log.d("TAG", "mess: "+data);
+                }
+                MessageAdapter adapter = new MessageAdapter(PlayActivity.this,R.layout.message_items,data);
+                lvMsg.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -328,24 +403,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         resumePosition = C.TIME_UNSET;
     }
 
-    /**
-     * Returns a new DataSource factory.
-     *
-     * @param useBandwidthMeter Whether to set {@link #BANDWIDTH_METER} as a listener to the new
-     *     DataSource factory.
-     * @return A new DataSource factory.
-     */
     private DataSource.Factory buildDataSourceFactory(boolean useBandwidthMeter) {
         return buildDataSourceFactory(useBandwidthMeter ? BANDWIDTH_METER : null);
     }
 
-    /**
-     * Returns a new HttpDataSource factory.
-     *
-     * @param useBandwidthMeter Whether to set {@link #BANDWIDTH_METER} as a listener to the new
-     *     DataSource factory.
-     * @return A new HttpDataSource factory.
-     */
     private HttpDataSource.Factory buildHttpDataSourceFactory(boolean useBandwidthMeter) {
         return buildHttpDataSourceFactory(useBandwidthMeter ? BANDWIDTH_METER : null);
     }
@@ -479,7 +540,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void share(View view) {
-        String[] ID=videoID.split("\\s");
 
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.share_dialog, null);
@@ -487,7 +547,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         TextView tvShare = alertLayout.findViewById(R.id.tvShare);
         ImageButton btnCopy = alertLayout.findViewById(R.id.btnCopy);
 
-        tvShare.setText(ID[0]);
+        tvShare.setText(streamName);
         Log.d("TAG", "share: "+ID[0]);
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setView(alertLayout);

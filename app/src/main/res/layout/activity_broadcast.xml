@@ -106,6 +106,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:onClick="chat"
             android:src="@drawable/ic_baseline_chat_24"
             />
     </LinearLayout>

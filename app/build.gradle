@@ -47,6 +47,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:16.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.1'
 
+//    implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
+//    implementation 'com.firebaseui:firebase-ui-database:3.3.1'
+//    implementation 'com.firebaseui:firebase-ui-firestore:3.3.1'
+//    implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
+    implementation 'com.firebaseui:firebase-ui:3.2.2'
+
+
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.writingminds:FFmpegAndroid:0.3.2'
 }

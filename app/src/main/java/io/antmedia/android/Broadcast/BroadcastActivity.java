@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -29,21 +30,37 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseListOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.antmedia.android.Dashboard.DashboardAcitivity;
+import io.antmedia.android.MessageAdapter;
 import io.antmedia.android.SignIn.SignInActivity;
+import io.antmedia.android.User;
 import io.antmedia.android.broadcaster.ILiveVideoBroadcaster;
 import io.antmedia.android.broadcaster.LiveVideoBroadcaster;
 import io.antmedia.android.broadcaster.R;
@@ -57,8 +74,10 @@ public class BroadcastActivity extends AppCompatActivity {
     private static final int MAX_LENGTH = 10;
     private GLSurfaceView gls;
     private TextView tvStatus;
-    private ImageButton btnRec,btnSetting,btnMic,btnCam,btnShare,btnChat;
+    private ImageButton btnRec,btnSetting,btnMic,btnCam,btnShare,btnChat,btnSend;
     private Button btnStart;
+
+    private String mess ="";
 
     private static final String TAG = BroadcastActivity.class.getSimpleName();
     private ViewGroup mRootView;
@@ -71,6 +90,11 @@ public class BroadcastActivity extends AppCompatActivity {
     private Intent mLiveVideoBroadcasterServiceIntent;
     private ILiveVideoBroadcaster mLiveVideoBroadcaster;
     private String streamName = "";
+    private String email,fullName,avatar,userID;
+
+    private FirebaseListAdapter<io.antmedia.android.Message> adapter;
+
+    private DatabaseReference ref;
 
     private ServiceConnection Connection = new ServiceConnection() {
         @Override
@@ -97,6 +121,10 @@ public class BroadcastActivity extends AppCompatActivity {
         setContentView(R.layout.activity_broadcast);
         Intent intent = getIntent();
         streamName = intent.getStringExtra("userID");
+        email = intent.getStringExtra("email");
+        fullName = intent.getStringExtra("fullName");
+        avatar = intent.getStringExtra("avatar");
+        userID = streamName;
         init();
 
         //binding on resume not to having leaked service connection
@@ -121,8 +149,9 @@ public class BroadcastActivity extends AppCompatActivity {
         btnChat = findViewById(R.id.btnChat);
         btnStart = findViewById(R.id.btnStart);
         mRootView = findViewById(R.id.root_layout);
-        TimerHandler = new TimerHandler();
+        btnSend = findViewById(R.id.btnSend);
 
+        TimerHandler = new TimerHandler();
 
         btnChat.setClickable(false);
         btnRec.setClickable(false);
@@ -337,10 +366,63 @@ public class BroadcastActivity extends AppCompatActivity {
                 snackbar.show();
             }
         });
-
-
-
     }
+
+    public void chat(View view) {
+        openDialog();
+    }
+
+    private void openDialog() {
+        LayoutInflater inflaterM = getLayoutInflater();
+        View alertLayoutM = inflaterM.inflate(R.layout.message_dialog, null);
+
+        final ListView lvMsg = alertLayoutM.findViewById(R.id.lvMsg);
+        final EditText txtMsg = alertLayoutM.findViewById(R.id.txtMsg);
+        ImageButton btnSend = alertLayoutM.findViewById(R.id.btnSend);
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        alert.setView(alertLayoutM);
+
+        final AlertDialog dialogI = alert.create();
+        dialogI.show();
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String mess = txtMsg.getText().toString();
+                io.antmedia.android.Message message = new io.antmedia.android.Message(streamName,email,fullName,streamName,avatar,mess);
+                FirebaseDatabase.getInstance()
+                        .getReference("message")
+                        .child(streamName)
+                        .push()
+                        .setValue(message);
+
+                // Clear the input
+                txtMsg.setText("");
+            }
+        });
+        ref = FirebaseDatabase.getInstance().getReference("message").child(streamName);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<io.antmedia.android.Message> data = new ArrayList<>();
+                for (DataSnapshot item : dataSnapshot.getChildren())
+                {
+                    data.add(item.getValue(io.antmedia.android.Message.class));
+                    Log.d(TAG, "mess: "+data);
+                }
+                MessageAdapter adapter = new MessageAdapter(BroadcastActivity.this,R.layout.message_items,data);
+                lvMsg.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     public void triggerStopRecording() {
         if (mIsRecording) {
@@ -351,6 +433,8 @@ public class BroadcastActivity extends AppCompatActivity {
             btnSetting.setClickable(true);
             btnRec.setClickable(false);
             btnChat.setClickable(false);
+
+            FirebaseDatabase.getInstance().getReference("message").child(streamName).removeValue();
 
             stopTimer();
             mLiveVideoBroadcaster.stopBroadcasting();
