@@ -307,6 +307,11 @@ public class BroadcastActivity extends AppCompatActivity {
                                 btnChat.setClickable(true);
                                 btnRec.setClickable(true);
                                 startTimer();//start the recording duration
+
+                                // Add roomID to live RTDB
+                                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                                DatabaseReference myRef = database.getReference("live").child(userID);
+                                myRef.setValue(1);
                             }
                             else {
                                 Snackbar.make(mRootView, "Fail to start", Snackbar.LENGTH_LONG).show();
@@ -435,6 +440,7 @@ public class BroadcastActivity extends AppCompatActivity {
             btnChat.setClickable(false);
 
             FirebaseDatabase.getInstance().getReference("message").child(streamName).removeValue();
+            FirebaseDatabase.getInstance().getReference("live").child(streamName).removeValue();
 
             stopTimer();
             mLiveVideoBroadcaster.stopBroadcasting();

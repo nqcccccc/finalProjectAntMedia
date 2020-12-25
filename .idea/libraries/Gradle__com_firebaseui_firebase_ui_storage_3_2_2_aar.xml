@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-ui-storage-3.2.2.aar/90ad873b9be3b3b04058c9cb82f32651/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-ui-storage-3.2.2.aar/90ad873b9be3b3b04058c9cb82f32651/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-ui-storage-3.2.2.aar/90ad873b9be3b3b04058c9cb82f32651/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-ui-storage-3.2.2.aar/11f87f16d6074958f7b20e39553da8df/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-ui-storage-3.2.2.aar/11f87f16d6074958f7b20e39553da8df/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/firebase-ui-storage-3.2.2.aar/11f87f16d6074958f7b20e39553da8df/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

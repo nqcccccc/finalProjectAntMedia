@@ -169,16 +169,37 @@ public class DashboardAcitivity extends AppCompatActivity implements View.OnClic
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String roomID = txtRoomID.getText().toString().trim() + " live=1";
-                Log.d("TAG", "RoomID: "+roomID);
-                Intent intentJoin = new Intent(DashboardAcitivity.this, PlayActivity.class);
-                intentJoin.putExtra("roomID",roomID);
-                intentJoin.putExtra("userID",userID);
-                intentJoin.putExtra("email",user.getEmail());
-                intentJoin.putExtra("avatar",user.getAvatar());
-                intentJoin.putExtra("fullName",user.getFullName());
-                startActivity(intentJoin);
-                dialogJ.cancel();
+                // Check active roomID
+                final String roomID = txtRoomID.getText().toString().trim();
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference myRef = database.getReference("live").child(roomID);
+                myRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists())
+                        {
+                            String roomID = txtRoomID.getText().toString().trim() + " live=1";
+                            Log.d("TAG", "RoomID: "+roomID);
+                            Intent intentJoin = new Intent(DashboardAcitivity.this, PlayActivity.class);
+                            intentJoin.putExtra("roomID",roomID);
+                            intentJoin.putExtra("userID",userID);
+                            intentJoin.putExtra("email",user.getEmail());
+                            intentJoin.putExtra("avatar",user.getAvatar());
+                            intentJoin.putExtra("fullName",user.getFullName());
+                            startActivity(intentJoin);
+                            dialogJ.cancel();
+                        }
+                        else
+                        {
+                            Toast.makeText(getApplicationContext(), "RoomID is incorrect!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
             }
         });
     }

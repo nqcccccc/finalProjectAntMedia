@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/finalProjectAntMedia.iml" filepath="$PROJECT_DIR$/.idea/modules/finalProjectAntMedia.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/finalProjectAntMedia.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/finalProjectAntMedia.app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/liveVideoBroadcasterSDK/finalProjectAntMedia.liveVideoBroadcasterSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/liveVideoBroadcasterSDK/finalProjectAntMedia.liveVideoBroadcasterSDK.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/finalProjectAntMedia_Ver5.iml" filepath="$PROJECT_DIR$/.idea/modules/finalProjectAntMedia_Ver5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/finalProjectAntMedia_Ver5.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/finalProjectAntMedia_Ver5.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/liveVideoBroadcasterSDK/finalProjectAntMedia_Ver5.liveVideoBroadcasterSDK.iml" filepath="$PROJECT_DIR$/.idea/modules/liveVideoBroadcasterSDK/finalProjectAntMedia_Ver5.liveVideoBroadcasterSDK.iml" />
     </modules>
   </component>
 </project>

@@ -4,6 +4,9 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/glide-4.6.1.aar/9b35274fef37a4e334e30d06fcda530e/jars/classes.jar!/" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/glide-4.6.1.aar/9b35274fef37a4e334e30d06fcda530e/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/glide-4.6.1.aar/9b35274fef37a4e334e30d06fcda530e/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/glide-4.6.1.aar/609e0a6859a361434056aa2de375156b/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/glide-4.6.1.aar/609e0a6859a361434056aa2de375156b/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/glide-4.6.1.aar/609e0a6859a361434056aa2de375156b/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
